@@ -43,7 +43,7 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories:
 
-![](https://raw.githubusercontent.com/lambtron/flandango/master/flandango.gif)
+![](https://raw.githubusercontent.com/lambtron/codepath-yelp/master/yelp.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
