@@ -2,7 +2,7 @@
 
 **Yelp** is a Yelp search app using the [Yelp API](http://www.yelp.com/developers/documentation/v2/search_api).
 
-Time spent: **4** hours spent in total
+Time spent: **8** hours spent in total
 
 ## User Stories
 
@@ -11,13 +11,13 @@ The following **required** functionality is completed:
 - [x] Search results page
    - [x] Table rows should be dynamic height according to the content height.
    - [x] Custom cells should have the proper Auto Layout constraints.
-   - [ ] Search bar should be in the navigation bar (doesn't have to expand to show location like the real Yelp app does).
-- [ ] Filter page. Unfortunately, not all the filters are supported in the Yelp API.
-   - [ ] The filters you should actually have are: category, sort (best match, distance, highest rated), distance, deals (on/off).
-   - [ ] The filters table should be organized into sections as in the mock.
-   - [ ] You can use the default UISwitch for on/off states.
-   - [ ] Clicking on the "Search" button should dismiss the filters page and trigger the search w/ the new filter settings.
-   - [ ] Display some of the available Yelp categories (choose any 3-4 that you want).
+   - [x] Search bar should be in the navigation bar (doesn't have to expand to show location like the real Yelp app does).
+- [x] Filter page. Unfortunately, not all the filters are supported in the Yelp API.
+   - [x] The filters you should actually have are: category, sort (best match, distance, highest rated), distance, deals (on/off).
+   - [x] The filters table should be organized into sections as in the mock.
+   - [x] You can use the default UISwitch for on/off states.
+   - [x] Clicking on the "Search" button should dismiss the filters page and trigger the search w/ the new filter settings.
+   - [x] Display some of the available Yelp categories (choose any 3-4 that you want).
 
 The following **optional** features are implemented:
 
@@ -36,14 +36,14 @@ The following **additional** features are implemented:
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1.
+1. 
 2.
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+![](https://raw.githubusercontent.com/lambtron/flandango/master/flandango.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -51,18 +51,24 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 Describe any challenges encountered while building the app.
 
-## License
+## License (MIT)
 
-    Copyright [yyyy] [name of copyright owner]
+```
+WWWWWW||WWWWWW
+ W W W||W W W
+      ||
+    ( OO )__________
+     /  |           \
+    /o o|    MIT     \
+    \___/||_||__||_|| *
+         || ||  || ||
+        _||_|| _||_||
+       (__|__|(__|__|
+```
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-        http://www.apache.org/licenses/LICENSE-2.0
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
