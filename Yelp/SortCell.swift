@@ -21,6 +21,13 @@ class SortCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        sortSegmentControl.addTarget(self, action: #selector(SortCell.segmentValueChanged), for: UIControlEvents.valueChanged)
+    }
+    
+    func segmentValueChanged() {
+        delegate?.sortCell!(sortCell: self, didChangeValue: sortSegmentControl.selectedSegmentIndex)
+    
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
