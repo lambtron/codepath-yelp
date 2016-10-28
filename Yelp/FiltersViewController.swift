@@ -12,57 +12,35 @@ import UIKit
     @objc optional func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filters: [String:AnyObject])
 }
 
-class FiltersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SwitchCellDelegate {
+class FiltersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SwitchCellDelegate, SortCellDelegate, DealCellDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     weak var delegate: FiltersViewControllerDelegate?
     
-    var sections = [[
-        "title": "deals",
-        "options": ["on", "off"]
-    ],
-    [
-        "title": "sort",
-        "options": ["best match", "distance", "highest rated"]
-    ],
-    [
-        "title": "distance",
-        "options": ["auto", "0.3", "1", "1.5", "3"]
-    ],
-    [
-        "title": "categories",
-        "options": []
-    ]]
-    var switchStates: [Int:[Int:Bool]]! = [
-        0:[0:false],
-        1:[0:false],
-        2:[0:false],
-        3:[0:false]
-    ]
+    var categories: [[String:String]]!
+    var switchStates = [Int:Bool]()
+    
+    var distances: [String:Int]!
+    var distancesKeys: [String]!
+    
+    var selectedSort = 0
+    var isDealSelected = false
+    
+    var selectedDistance = "Best Match"
+    var selectedDistanceIndex = 0
+    var shouldDisplayAllDistances = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        sections = [
-            [
-                "title": "deals",
-                "options": ["on", "off"]
-            ],
-            [
-                "title": "sort",
-                "options": ["best match", "distance", "highest rated"]
-            ],
-            [
-                "title": "distance",
-                "options": ["auto", "0.3", "1", "1.5", "3"]
-            ],
-            [
-                "title": "categories",
-                "options": yelpCategories()
-        ]]
         
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.estimatedRowHeight = 44.0
+        tableView.rowHeight = UITableViewAutomaticDimension
+        
+        categories = yelpCategories()
+        distances = yelpDistances()
+        distancesKeys = Array(self.distances.keys)
     }
 
     override func didReceiveMemoryWarning() {
@@ -87,65 +65,159 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
     
     @IBAction func onSearchButton(_ sender: AnyObject) {
         dismiss(animated: true, completion: nil)
+        var filters = [String:AnyObject]()
         
-//        var filters = [String : AnyObject]()
-//        var selectedCategories = [String]()
-//        for (row,isSelected) in switchStates {
-//            if isSelected {
-//                selectedCategories.append(categories[row]["code"]!)
-//            }
-//        }
+        // Category filters.
+        var selectedCategories = [String]()
+        for (row, isSelected) in switchStates {
+            if isSelected {
+                selectedCategories.append(categories[row]["code"]!)
+            }
+        }
         
-//        if selectedCategories.count > 0 {
-//            filters["categories"] = selectedCategories as AnyObject?
-//        }
+        if selectedCategories.count > 0 {
+            filters["categories"] = selectedCategories as AnyObject?
+        }
         
-//        print("\(delegate)")
-//        
-//        delegate?.filtersViewController!(filtersViewController: self, didUpdateFilters: filters)
+        // Deal filters.
+        filters["deals"] = isDealSelected as AnyObject?
+        
+        // Sort
+        filters["sort"] = selectedSort as AnyObject?
+        
+        // Distance
+        filters["distance"] = distances[selectedDistance] as AnyObject?
+        
+    
+        delegate?.filtersViewController!(filtersViewController: self, didUpdateFilters: filters)
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
+        return 4
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let section = sections[section] as Dictionary
-        let options = section["options"] as! [AnyObject]
-        print("options \(options.count)")
-        return options.count
+        if section == 0 {
+            return 1
+        }
+        else if section == 1 {
+            return shouldDisplayAllDistances ? (distances.count + 1) : 1
+        }
+        else if section == 2 {
+            return 1
+        }
+        else if section == 3 {
+            return categories.count
+        }
+        return 1
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let section = sections[section] as Dictionary
-        return section["title"] as! String?
+        if section == 0 {
+            return nil
+        }
+        else if section == 1 {
+            return "Distance"
+        }
+        else if section == 2 {
+            return "Sort By"
+        }
+        else if section == 3 {
+            return "Category"
+        } else {
+            return nil
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
-        let section = sections[indexPath.section] as Dictionary
-        let options = section["options"] as! [AnyObject]
-        var label = options[indexPath.row] as? String
-        
-        if label == nil {
-            var category = options[indexPath.row] as? [String:String]
-            label = (category?["name"])! as String
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DealCell", for: indexPath) as! DealCell
+            cell.delegate = self
+            return cell
         }
-        
-        cell.switchLabel.text = label
-        cell.delegate = self
-        
-//        cell.onSwitch.isOn = switchStates[indexPath.row] ?? false
-        
-        return cell
+        else if indexPath.section == 1 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "DistanceCell", for: indexPath) as! DistanceCell
+            
+            let checkedOrNil = selectedDistanceIndex == indexPath.row ? UIImage(named: "checked") : nil
+            cell.checkedImageView.image = checkedOrNil
+            
+            var text = String()
+            if indexPath.row == 0 {
+                text = selectedDistance
+                
+                if !shouldDisplayAllDistances {
+                    cell.checkedImageView.image = UIImage(named: "checked")
+                }
+            }
+            else {
+                text = distancesKeys[indexPath.row - 1]
+            }
+            cell.distanceLabel.text = text
+            
+            return cell
+        }
+        else if indexPath.section == 2 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SortCell", for: indexPath) as! SortCell
+            cell.delegate = self
+            return cell
+        }
+        else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
+            cell.switchLabel.text = categories[indexPath.row]["name"]
+            cell.onSwitch.isOn = switchStates[indexPath.row] ?? false
+            
+            cell.delegate = self
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 1 {
+            if indexPath.row == 0 {
+                shouldDisplayAllDistances = !shouldDisplayAllDistances
+                selectedDistance = "Best Match"
+                if !shouldDisplayAllDistances {
+                    selectedDistanceIndex = indexPath.row
+                }
+                tableView.reloadData()
+                return
+            }
+            
+            if shouldDisplayAllDistances {
+                let cell = tableView.cellForRow(at: indexPath) as! DistanceCell
+                cell.checkedImageView.image = UIImage(named: "checked")
+                selectedDistanceIndex = indexPath.row
+                selectedDistance = cell.distanceLabel.text!
+            }
+            
+            shouldDisplayAllDistances = !shouldDisplayAllDistances
+            tableView.reloadData()
+        }
     }
     
     func switchCell(switchCell: SwitchCell, didChangeValue value: Bool) {
-//        let indexPath = tableView.indexPath(for: switchCell)!
-        
-//        switchStates[indexPath.row] = value
+        let indexPath = tableView.indexPath(for: switchCell)!
+        switchStates[indexPath.row] = value
+    }
+
+    func sortCell(sortCell: SortCell, didChangeValue value: Int) {
+        selectedSort = value
     }
     
+    func dealCell(dealCell: DealCell, didChangeValue value: Bool) {
+        isDealSelected = value
+    }
+    
+    // Yelp stuff.
+    
+    func yelpDistances() -> [String: Int] {
+        return [
+                " 2 blocks": 160,
+                " 6 blocks": 482,
+                " 1 mile": 1609,
+                " 5 miles": 8046
+        ]
+    }
     
     func yelpCategories() -> [[String:String]] {
         return   [["name" : "Afghan", "code": "afghani"],
