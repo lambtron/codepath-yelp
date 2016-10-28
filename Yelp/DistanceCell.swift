@@ -11,8 +11,6 @@ import UIKit
 class DistanceCell: UITableViewCell {
 
     @IBOutlet weak var distanceLabel: UILabel!
-    @IBOutlet weak var checkedImageView: UIImageView!
-    
     
     override func awakeFromNib() {
         super.awakeFromNib()
