@@ -124,9 +124,8 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         else if section == 3 {
             return "Category"
-        } else {
-            return nil
         }
+        return nil
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -137,23 +136,13 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         else if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "DistanceCell", for: indexPath) as! DistanceCell
-            
-            let checkedOrNil = selectedDistanceIndex == indexPath.row ? UIImage(named: "checked") : nil
-            cell.checkedImageView.image = checkedOrNil
-            
             var text = String()
             if indexPath.row == 0 {
                 text = selectedDistance
-                
-                if !shouldDisplayAllDistances {
-                    cell.checkedImageView.image = UIImage(named: "checked")
-                }
-            }
-            else {
+            } else {
                 text = distancesKeys[indexPath.row - 1]
             }
             cell.distanceLabel.text = text
-            
             return cell
         }
         else if indexPath.section == 2 {
@@ -165,7 +154,6 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
             cell.switchLabel.text = categories[indexPath.row]["name"]
             cell.onSwitch.isOn = switchStates[indexPath.row] ?? false
-            
             cell.delegate = self
             return cell
         }
@@ -185,7 +173,6 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
             
             if shouldDisplayAllDistances {
                 let cell = tableView.cellForRow(at: indexPath) as! DistanceCell
-                cell.checkedImageView.image = UIImage(named: "checked")
                 selectedDistanceIndex = indexPath.row
                 selectedDistance = cell.distanceLabel.text!
             }
