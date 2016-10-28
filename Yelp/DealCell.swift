@@ -21,8 +21,14 @@ class DealCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        dealSwitch.addTarget(self, action: #selector(DealCell.switchValueChanged), for: UIControlEvents.valueChanged)
     }
 
+    func switchValueChanged() {
+        delegate?.dealCell!(dealCell: self, didChangeValue: dealSwitch.isOn)
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
